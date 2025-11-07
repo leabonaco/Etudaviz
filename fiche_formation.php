@@ -149,6 +149,19 @@ if (!empty($etab['coordonnees'][0]) && !empty($etab['coordonnees'][1])):
   <div id="map" style="height: 300px; border-radius: 10px;"></div>
 </div>
 
+<div class="formation-section distance-calculator">
+  <h3>Calculer la distance depuis votre domicile</h3>
+  <p>Entrez votre adresse pour estimer la distance jusqu’à cet établissement :</p>
+
+  <div class="distance-form">
+    <input type="text" id="userAddress" placeholder="Entrez votre ville (ex. : Lille)" />
+    <button id="btnDistance" onclick="calculateDistance()">Calculer</button>
+  </div>
+
+  <p id="distanceResult" class="distance-result"></p>
+</div>
+
+
 <!-- Leaflet CSS + JS -->
 <link
   rel="stylesheet"
@@ -170,6 +183,7 @@ if (!empty($etab['coordonnees'][0]) && !empty($etab['coordonnees'][1])):
 
 <!-- Ton script personnalisé (après définition des variables) -->
 <script src="./js/map.js"></script>
+<script src="./js/distance.js"></script>
 <?php endif; ?>
 
 </section>

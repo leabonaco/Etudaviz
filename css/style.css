@@ -1254,3 +1254,37 @@ section:nth-child(even) {
   line-height: 1.7;
 }
 
+.distance-calculator {
+  margin-top: 20px;
+  background: #f9fbff;
+  padding: 15px 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.distance-form {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.distance-form input {
+  flex: 1;
+  padding: 8px;
+  border: 1px solid #ccd;
+  border-radius: 8px;
+}
+
+.distance-form button {
+  background: #0053ba;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 15px;
+  cursor: pointer;
+}
+
+.distance-result {
+  font-weight: bold;
+  color: #004080;
+}
