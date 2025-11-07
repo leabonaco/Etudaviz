@@ -14,6 +14,8 @@
                     <strong>comparer les parcours</strong> et lire les
                     <strong>témoignages d’étudiants</strong> pour trouver la voie qui te correspond.
                 </p>
+                <p>ceci est un test
+</p>
                 <div class="hero-buttons">
                     <a href="formations.php" class="btn-primary">Explorer les formations</a>
                     <a href="orientation.php" class="btn-secondary">Trouver ma voie</a>
