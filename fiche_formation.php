@@ -11,6 +11,8 @@ $debouches = getDebouchesDepuisOnisep(
     $etab['nom'] ?? '',
     $etab['code_formation'] ?? null
 );
+// Plus tard, tu remplaceras ceci par ton vrai système de session
+$user_is_subscribed = false; // true si abonné connecté
 
 $title = "Détails - " . ($etab['nom'] ?? 'Formation');
 $h1    = $etab['nom'] ?? 'Formation';
@@ -125,67 +127,61 @@ require "./include/header.inc.php";
   </div>
 
   <?php if ($debouches): ?>
-  <div class="formation-section debouches">
-    <h3>Débouchés et poursuites d’études</h3>
-    <?php if (!empty($debouches['secteur'])): ?>
-      <p><strong>Secteur(s) :</strong> <?= htmlspecialchars($debouches['secteur']) ?></p>
-    <?php endif; ?>
-    <?php if (!empty($debouches['debouches'])): ?>
-      <p><strong>Métiers visés :</strong> <?= nl2br(htmlspecialchars($debouches['debouches'])) ?></p>
-    <?php endif; ?>
-    <?php if (!empty($debouches['poursuite_etudes'])): ?>
-      <p><strong>Poursuites d’études :</strong> <?= nl2br(htmlspecialchars($debouches['poursuite_etudes'])) ?></p>
-    <?php endif; ?>
-  </div>
+    <div class="formation-section debouches">
+      <h3>Débouchés et poursuites d’études</h3>
+        <?php if (!empty($debouches['secteur'])): ?>
+          <p><strong>Secteur(s) :</strong> <?= htmlspecialchars($debouches['secteur']) ?></p>
+        <?php endif; ?>
+        <?php if (!empty($debouches['debouches'])): ?>
+          <p><strong>Métiers visés :</strong> <?= nl2br(htmlspecialchars($debouches['debouches'])) ?></p>
+        <?php endif; ?>
+        <?php if (!empty($debouches['poursuite_etudes'])): ?>
+          <p><strong>Poursuites d’études :</strong> <?= nl2br(htmlspecialchars($debouches['poursuite_etudes'])) ?></p>
+        <?php endif; ?>
+    </div>
   <?php endif; ?>
 
-    <?php
-if (!empty($etab['coordonnees'][0]) && !empty($etab['coordonnees'][1])):
-    $lat = $etab['coordonnees'][0];
-    $lon = $etab['coordonnees'][1];
-?>
-<div class="formation-section map">
-  <h3>Localisation de l’établissement</h3>
-  <div id="map" style="height: 300px; border-radius: 10px;"></div>
-</div>
+    <?php if (!empty($etab['coordonnees'][0]) && !empty($etab['coordonnees'][1])):$lat = $etab['coordonnees'][0]; $lon = $etab['coordonnees'][1];?>
+      <div class="formation-section map">
+        <h3>Localisation de l’établissement</h3>
+          <div id="map" style="height: 300px; border-radius: 10px;"></div>
+      </div>
+      <div class="formation-section distance-calculator">
+        <h3>Calculer la distance depuis votre domicile</h3>
+          <?php if (!$user_is_subscribed): ?>
+            <p>Entrez votre adresse pour estimer la distance jusqu’à cet établissement :</p>
+            <div class="distance-form">
+              <input type="text" id="userAddress" placeholder="Entrez votre ville (ex. : Lille)" />
+              <button id="btnDistance" onclick="calculateDistance()">Calculer</button>
+            </div>
+            <p id="distanceResult" class="distance-result"></p>
+          <?php else: ?>
+            <div class="distance-locked">
+              <p>🔒 Cette fonctionnalité est réservée à nos abonnés.</p>
+              <a href="/login.php" class="btn-login">Se connecter</a>
+              <a href="/abonnement.php" class="btn-subscribe">Découvrir les offres</a>
+            </div>
+          <?php endif; ?>
+      </div>
+    <?php endif; ?>
+  </section>
 
-<div class="formation-section distance-calculator">
-  <h3>Calculer la distance depuis votre domicile</h3>
-  <p>Entrez votre adresse pour estimer la distance jusqu’à cet établissement :</p>
 
-  <div class="distance-form">
-    <input type="text" id="userAddress" placeholder="Entrez votre ville (ex. : Lille)" />
-    <button id="btnDistance" onclick="calculateDistance()">Calculer</button>
-  </div>
-
-  <p id="distanceResult" class="distance-result"></p>
-</div>
 
 
 <!-- Leaflet CSS + JS -->
-<link
-  rel="stylesheet"
-  href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-  integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-  crossorigin=""
-/>
-<script
-  src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-></script>
-
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-  // Variables globales pour map.js
   window.mapLat = <?= json_encode($lat) ?>;
   window.mapLon = <?= json_encode($lon) ?>;
   window.mapZoom = 14;
   window.mapMarkerLabel = <?= json_encode($etab['etablissement'] . ' - ' . ($etab['ville'] ?? '')) ?>;
 </script>
 
-<!-- Ton script personnalisé (après définition des variables) -->
+
 <script src="./js/map.js"></script>
 <script src="./js/distance.js"></script>
-<?php endif; ?>
 
-</section>
 
 <?php require "./include/footer.inc.php"; ?>

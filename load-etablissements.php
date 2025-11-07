@@ -1,7 +1,7 @@
 <?php
 require './include/functions.inc.php';
 
-$limit = 10;
+$limit = 5;
 $page = (int)($_GET['page'] ?? 1);
 $offset = ($page - 1) * $limit;
 
@@ -16,7 +16,7 @@ $etablissements = getEtablissementsSupPublics([
 
 if (!isset($etablissements['error']) && !empty($etablissements)) {
     foreach ($etablissements as $record) {
-        echo renderEtablissementCard(formatEtablissement($record['fields']));
+        echo renderEtablissementCard(formatEtablissement($record['fields'], $record['recordid']));
     }
 }
  

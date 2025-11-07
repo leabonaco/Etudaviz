@@ -36,8 +36,8 @@ if(isset($_COOKIE['visited'])) {
             <li>
               <a href="formations.php"><img src="images/fleche-droite.png" alt="Flèche" class="nav-icon">Formations</a>
               <ul class="submenu">
-                <li><a href="#">A définir</a></li>
-                <li><a href="#">A définir</a></li>
+                <li><a href="formations.php?region=&departement=&type=Formations+en+universit%C3%A9">Université</a></li>
+                <li><a href="formations.php?region=&departement=&type=BTS+-+BTSA+-+BTSM">BTS</a></li>
               </ul>
             </li>
             
