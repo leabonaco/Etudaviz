@@ -24,72 +24,69 @@ function getCurrentDate(string $format = "d/m/Y"): string {
  */
 function buildEtablissementsApiParams(array $options = []): array
 {
-    $params = [
+    $base = [
         'dataset' => 'fr-esr-cartographie_formations_parcoursup',
         'rows'    => $options['limit'] ?? 100,
-        'facet'   => ['region', 'departement', 'commune', 'tf']
+        'facet'   => ['region', 'departement', 'commune', 'tf'],
     ];
 
-    // Pagination
-    if (!empty($options['offset'])) {
-        $params['start'] = (int)$options['offset'];
-    }
+    if (!empty($options['offset'])) $base['start'] = (int)$options['offset'];
+    if (!empty($options['search'])) $base['q'] = $options['search'];
 
-    // Recherche libre
-    if (!empty($options['search'])) {
-        $params['q'] = $options['search'];
-    }
-
-    // Filtres région / département / commune
-    $filtres = [
-        'region'      => 'region',
-        'departement' => 'departement',
-        'commune'     => 'ville'
-    ];
-
+    $filtres = ['region' => 'region', 'departement' => 'departement', 'commune' => 'ville'];
     foreach ($filtres as $apiField => $userParam) {
         if (!empty($options[$userParam])) {
-            $params["refine.$apiField"] = $options[$userParam];
+            $base["refine.$apiField"] = $options[$userParam];
         }
     }
 
-    // --- Gestion du "type" ---
+    // Gestion "type"
+    $typeFacets = [];
     if (!empty($options['type'])) {
         $type = trim($options['type']);
-
-        // Types valides trouvés dans le dataset
         $typeMap = [
-            "BTS - BTSA - BTSM"                        => ["BTS - BTSA - BTSM"],
-            "Formations des écoles d’ingénieurs"       => ["Formations des écoles d’ingénieurs"],
-            "Formations du travail social"             => ["Formations diplômantes du travail social"],
-            "Université"                               => [
-                "Licence",
-                "Licence sélective",
-                "Licence professionnelle",
-                "DEUST",
-                "Diplômes d'université ou d'établissement",
-                "BUT",
-                "DUT",
+            "BTS - BTSA - BTSM" => ["BTS - BTSA - BTSM"],
+            "Formations des écoles d’ingénieurs" => ["Formations des écoles d’ingénieurs"],
+            "Formations du travail social" => ["Formations diplômantes du travail social"],
+            "Université" => [
+                "Licence","Licence sélective","Licence professionnelle","DEUST",
+                "Diplômes d'université ou d'établissement","BUT","DUT",
                 "C.M.I - Cursus Master en Ingénierie",
                 "I.A.E - Instituts d'administration des entreprises",
                 "Formations d'architecture, du paysage et du patrimoine"
             ]
         ];
-
         if (isset($typeMap[$type])) {
-            foreach ($typeMap[$type] as $tfValue) {
-                $params["refine.tf[]"] = $tfValue; // permet plusieurs facettes
-            }
+            $typeFacets = $typeMap[$type]; // on les injectera dans l’URL en répétant refine.tf
         } else {
-            // Recherche libre si non reconnu
-            $params['q'] = trim(($params['q'] ?? '') . ' ' . $type);
+            // fallback: on booste la recherche libre
+            $base['q'] = trim(($base['q'] ?? '') . ' ' . $type);
         }
     }
 
-    return $params;
+    return ['base' => $base, 'refine_tf' => $typeFacets];
 }
 
+function getEtablissementsSupPublics(array $options = []): array
+{
+    $built = buildEtablissementsApiParams($options);
+    $base  = $built['base'];
+    $tfFacets = $built['refine_tf'] ?? [];
 
+    // http_build_query pour la partie de base
+    $query = http_build_query($base);
+
+    // On ajoute chaque refine.tf à la main pour éviter l’écrasement
+    foreach ($tfFacets as $tf) {
+        $query .= '&' . rawurlencode('refine.tf') . '=' . rawurlencode($tf);
+    }
+
+    $url  = "https://data.enseignementsup-recherche.gouv.fr/api/records/1.0/search?$query";
+    $data = callOpenDataApi($url);
+
+    if (isset($data['error'])) return ['error' => $data['error']];
+    return $data['records'] ?? ['error' => 'Aucune donnée reçue depuis l’API Parcoursup.'];
+}
 
 
 
@@ -125,56 +122,6 @@ function callOpenDataApi(string $url): array {
         : ['error' => 'Réponse invalide de l’API (JSON mal formé ou vide).'];
 }
 
-
-/**
- * Récupère une liste de formations issues du jeu de données ONISEP.
- *
- * Cette fonction interroge le jeu de données public « fr-esr-onisep » hébergé sur
- * data.education.gouv.fr. Elle prend en compte les paramètres générés par
- * {@see buildEtablissementsApiParams()} et retourne un tableau de résultats
- * correspondant aux formations disponibles (universités, BTS, CPGE, IUT, etc.).
- *
- * Exemple d’utilisation :
- * ```php
- * $formations = getEtablissementsSupPublics([
- *     'search' => 'informatique',
- *     'region' => 'Hauts-de-France',
- *     'limit'  => 10
- * ]);
- * if (isset($formations['error'])) {
- *     echo $formations['error'];
- * } else {
- *     print_r($formations);
- * }
- * ```
- *
- * @param array $options Tableau associatif des filtres à appliquer :
- *                       - string 'search'      : mots-clés recherchés (optionnel)
- *                       - string 'region'      : région ciblée (optionnel)
- *                       - string 'departement' : département ciblé (optionnel)
- *                       - string 'ville'       : commune ciblée (optionnel)
- *                       - string 'type'        : type de formation (BTS, Licence, etc.) (optionnel)
- *                       - int    'limit'       : nombre maximal de résultats à retourner (défaut : 100)
- *                       - int    'offset'      : décalage pour la pagination (optionnel)
- *
- * @return array Tableau associatif des enregistrements renvoyés par l’API ONISEP,
- *               ou ['error' => 'message'] en cas d’échec de la requête.
- *
- * @author  Étudaviz
- * @version 2.0 Migration vers le dataset ONISEP
- */
-function getEtablissementsSupPublics(array $options = []): array
-{
-    $params = buildEtablissementsApiParams($options);
-    $url = "https://data.enseignementsup-recherche.gouv.fr/api/records/1.0/search?" . http_build_query($params);
-    $data = callOpenDataApi($url);
-
-    if (isset($data['error'])) {
-        return ['error' => $data['error']];
-    }
-
-    return $data['records'] ?? ['error' => 'Aucune donnée reçue depuis l’API Parcoursup.'];
-}
 
 
 
@@ -390,8 +337,8 @@ function formatEtablissement(array $fields, string $recordid = null): array
 function getEtablissementById(string $id): ?array {
     $url = "https://data.enseignementsup-recherche.gouv.fr/api/records/1.0/search?" . http_build_query([
         'dataset' => 'fr-esr-cartographie_formations_parcoursup',
-        'q' => "recordid:$id",
-        'rows' => 1
+        'rows'    => 1,
+        'refine.recordid' => $id,
     ]);
 
     $data = callOpenDataApi($url);
@@ -403,25 +350,41 @@ function getEtablissementById(string $id): ?array {
 }
 
 
-function getDebouchesDepuisOnisep(string $intitule): ?array {
-    $url = "https://data.education.gouv.fr/api/records/1.0/search?" . http_build_query([
+function getDebouchesDepuisOnisep(string $intitule, ?string $code = null): ?array {
+    // 1) si on a un code formation (ou un libellé exact), tenter refine exact
+    $base = [
         'dataset' => 'fr-esr-onisep',
-        'q' => $intitule,
-        'rows' => 1
-    ]);
+        'rows'    => 1,
+    ];
 
-    $data = callOpenDataApi($url);
-    if (!isset($data['records'][0]['fields'])) {
-        return null;
+    $attempts = [];
+
+    if ($code) {
+        $attempts[] = array_merge($base, ['refine.code_formation' => $code]);
+    }
+    if ($intitule) {
+        // tentative refine exact sur libellé si le dataset le prévoit
+        $attempts[] = array_merge($base, ['refine.fl' => $intitule]);
+        // fallback plein texte
+        $attempts[] = array_merge($base, ['q' => $intitule]);
     }
 
-    $fields = $data['records'][0]['fields'];
-    return [
-        'secteur' => $fields['secteur'] ?? null,
-        'debouches' => $fields['debouches'] ?? null,
-        'poursuite_etudes' => $fields['poursuite_etudes'] ?? null,
-    ];
+    foreach ($attempts as $params) {
+        $url  = "https://data.education.gouv.fr/api/records/1.0/search?" . http_build_query($params);
+        $data = callOpenDataApi($url);
+        if (!empty($data['records'][0]['fields'])) {
+            $f = $data['records'][0]['fields'];
+            return [
+                'secteur'          => $f['secteur'] ?? null,
+                'debouches'        => $f['debouches'] ?? null,
+                'poursuite_etudes' => $f['poursuite_etudes'] ?? null,
+                // tu peux aussi exposer 'competences' si dispo : $f['competences'] ?? null,
+            ];
+        }
+    }
+    return null;
 }
+
 
 
 

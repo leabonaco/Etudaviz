@@ -1,107 +1,177 @@
 <?php
-    require "./include/functions.inc.php";
+require "./include/functions.inc.php";
 
-    $id = $_GET['id'] ?? null;
-    if (!$id) {
-        die("Formation introuvable.");
-    }
-    $etab = getEtablissementById($id);
-    if (!$etab) {
-        die("Aucune donnée trouvée.");
-    }
-    $debouches = getDebouchesDepuisOnisep($etab['nom'] ?? $etab['fl'] ?? '');
-    $title = "Détails - " . $etab['nom'];
-    $h1 = $etab['nom'];
-    require "./include/header.inc.php";
+$id = $_GET['id'] ?? null;
+if (!$id) die("Formation introuvable.");
+
+$etab = getEtablissementById($id);
+if (!$etab) die("Aucune donnée trouvée.");
+
+$debouches = getDebouchesDepuisOnisep(
+    $etab['nom'] ?? '',
+    $etab['code_formation'] ?? null
+);
+
+$title = "Détails - " . ($etab['nom'] ?? 'Formation');
+$h1    = $etab['nom'] ?? 'Formation';
+require "./include/header.inc.php";
 ?>
 
-    <section class="formation-detail">
-        <div class="formation-section presentation">
+<section class="formation-detail">
+  <div class="formation-section presentation">
     <h3>Présentation de la formation</h3>
 
-    <?php 
-        $fl = $etab['fl'] ?? '';
-        $nm = $etab['nm'] ?? '';
-        $tf = $etab['tf'] ?? '';
-        $etablissement = $etab['etablissement'] ?? '';
-        $discipline = '';
+    <?php
+      $fl = $etab['nom'] ?? '';
+      $tf = $etab['type'] ?? '';
+      $etablissement = $etab['etablissement'] ?? '';
+      $discipline = '';
 
-        // Si le titre de la formation contient un tiret, on récupère la partie après le premier
-        if (!empty($fl) && str_contains($fl, '-')) {
-            $parts = explode('-', $fl, 2);
-            $discipline = trim($parts[1]);
-        }
+      // Si le nom contient un tiret, on prend la partie après pour isoler la spécialité
+      if (!empty($fl) && strpos($fl, '-') !== false) {
+          $parts = explode('-', $fl, 2);
+          $discipline = trim($parts[1]);
+      }
+
+      // ✅ Texte d’intro dynamique selon le type de formation
+      $introTexte = "";
+      switch (true) {
+        case stripos($tf, 'BTS') !== false:
+          $introTexte = "Le {$tf} {$discipline} est une formation courte et professionnalisante de niveau Bac+2. 
+          Elle prépare les étudiants à une insertion rapide dans le monde du travail tout en offrant des possibilités 
+          de poursuite d’études, notamment vers les licences professionnelles ou les écoles spécialisées.";
+          break;
+
+        case stripos($tf, 'BUT') !== false:
+          $introTexte = "Le {$tf} {$discipline} est un diplôme de niveau Bac+3 proposé par les Instituts Universitaires 
+          de Technologie. Il associe enseignements théoriques, projets tutorés et stages, pour former des techniciens 
+          supérieurs immédiatement opérationnels.";
+          break;
+
+        case stripos($tf, 'Licence professionnelle') !== false:
+          $introTexte = "Cette {$tf} {$discipline} est une formation universitaire d’un an, destinée à des étudiants 
+          souhaitant se spécialiser après un Bac+2. Elle met l’accent sur la professionnalisation et l’expérience en entreprise.";
+          break;
+
+        case stripos($tf, 'Licence') !== false:
+          $introTexte = "La {$tf} {$discipline} est un cursus universitaire en trois ans qui offre une base solide dans 
+          le domaine concerné. Elle vise à développer les connaissances académiques et les compétences fondamentales 
+          nécessaires pour la poursuite d’études ou l’entrée dans la vie active.";
+          break;
+
+        case stripos($tf, 'Master') !== false:
+          $introTexte = "Le {$tf} {$discipline} est une formation de niveau Bac+5 qui approfondit les compétences 
+          acquises en licence. Elle prépare à des fonctions d’expertise, de recherche ou de management, selon la spécialité choisie.";
+          break;
+
+        default:
+            $disc = $discipline ?: 'la discipline concernée';
+            $introTexte = "La formation {$fl} proposée par {$etablissement} permet d’acquérir des compétences solides 
+            dans le domaine de {$disc}. 
+            Elle associe cours théoriques, travaux pratiques et mise en situation professionnelle.";
+            break;
+
+      }
     ?>
 
     <p class="intro">
-        <?= htmlspecialchars($nm ?: $fl ?: 'Cette formation') ?> 
-        est une formation de type 
-        <strong><?= htmlspecialchars($tf ?: 'non précisé') ?></strong> 
-        dispensée par 
-        <strong><?= htmlspecialchars($etablissement ?: 'un établissement non spécifié') ?></strong>. 
-        Elle s’adresse principalement aux étudiants souhaitant développer des compétences 
-        dans le domaine de 
-        <?= htmlspecialchars($discipline ?: 'la discipline concernée') ?> 
-        et prépare à l’obtention d’un diplôme reconnu par l’État.
+      <?= nl2br(htmlspecialchars($introTexte)) ?>
     </p>
 
     <ul class="presentation-details">
-        <?php if (!empty($etab['annee'])): ?>
-            <li><strong>Année de référence :</strong> <?= htmlspecialchars($etab['annee']) ?></li>
-        <?php endif; ?>
+      <?php if (!empty($etab['annee'])): ?>
+        <li><strong>Année de référence :</strong> <?= htmlspecialchars($etab['annee']) ?></li>
+      <?php endif; ?>
 
-        <?php if (!empty($etab['app'])): ?>
-            <li><strong>Modalité :</strong> <?= htmlspecialchars($etab['app']) ?></li>
-        <?php endif; ?>
+      <?php if (!empty($etab['app'])): ?>
+        <li><strong>Modalité :</strong> <?= htmlspecialchars($etab['app']) ?></li>
+      <?php endif; ?>
 
-        <?php if (!empty($etab['amg'])): ?>
-            <li><strong>Organisation pédagogique :</strong> 
-                <?= htmlspecialchars(str_replace('|', ', ', $etab['amg'])) ?>
-            </li>
-        <?php endif; ?>
+      <?php if (!empty($etab['region']) || !empty($etab['departement']) || !empty($etab['ville'])): ?>
+        <li><strong>Localisation :</strong> 
+          <?= htmlspecialchars(trim(($etab['ville'] ?? '').', '.($etab['departement'] ?? '').', '.($etab['region'] ?? ''), ' ,')) ?>
+        </li>
+      <?php endif; ?>
 
-        <?php if (!empty($etab['aut'])): ?>
-            <li><strong>Conditions d’accès :</strong> <?= htmlspecialchars($etab['aut']) ?></li>
-        <?php endif; ?>
+      <?php if (!empty($etab['site'])): ?>
+        <li><strong>Site de l’établissement :</strong> 
+          <a href="<?= htmlspecialchars($etab['site']) ?>" target="_blank" rel="noopener">
+            Visiter le site
+          </a>
+        </li>
+      <?php endif; ?>
 
-        <?php if (!empty($etab['tc'])): ?>
-            <li><strong>Statut de l’établissement :</strong> <?= htmlspecialchars($etab['tc']) ?></li>
-        <?php endif; ?>
+      <?php if (!empty($etab['lien'])): ?>
+        <li><strong>Fiche Parcoursup :</strong> 
+          <a href="<?= htmlspecialchars($etab['lien']) ?>" target="_blank" rel="noopener">
+            Consulter la fiche
+          </a>
+        </li>
+      <?php endif; ?>
     </ul>
 
     <div class="formation-description">
-        <p>
-            Cette formation permet aux étudiants d’acquérir les connaissances théoriques et pratiques nécessaires 
-            pour exercer dans le secteur correspondant. Elle met l’accent sur la professionnalisation, 
-            à travers des cours spécialisés, des projets et parfois des périodes de stage en entreprise.
-        </p>
-
-        <p>
-            Selon le parcours et la spécialité, les débouchés peuvent inclure des postes dans 
-            des entreprises, des administrations ou des établissements publics, 
-            ainsi qu’une poursuite d’études vers un niveau supérieur 
-            (Licence professionnelle, Master, ou école spécialisée).
-        </p>
+      <p>
+        Cette formation associe enseignements théoriques et mises en pratique 
+        à travers des projets concrets et, selon le parcours, des stages en milieu professionnel. 
+        Les contenus varient d’un établissement à l’autre et peuvent inclure des modules d’ouverture 
+        vers d’autres disciplines.
+      </p>
+      <p>
+        Les étudiants développent ainsi à la fois des savoirs fondamentaux et des compétences 
+        directement mobilisables dans leur futur environnement professionnel.
+      </p>
     </div>
-        </div>
+  </div>
 
-
-    </section>
-
-    <?php if ($debouches): ?>
-<section class="formation-section debouches">
+  <?php if ($debouches): ?>
+  <div class="formation-section debouches">
     <h3>Débouchés et poursuites d’études</h3>
     <?php if (!empty($debouches['secteur'])): ?>
-        <p><strong>Secteur(s) :</strong> <?= htmlspecialchars($debouches['secteur']) ?></p>
+      <p><strong>Secteur(s) :</strong> <?= htmlspecialchars($debouches['secteur']) ?></p>
     <?php endif; ?>
     <?php if (!empty($debouches['debouches'])): ?>
-        <p><strong>Métiers visés :</strong> <?= htmlspecialchars($debouches['debouches']) ?></p>
+      <p><strong>Métiers visés :</strong> <?= nl2br(htmlspecialchars($debouches['debouches'])) ?></p>
     <?php endif; ?>
     <?php if (!empty($debouches['poursuite_etudes'])): ?>
-        <p><strong>Poursuites d’études :</strong> <?= htmlspecialchars($debouches['poursuite_etudes']) ?></p>
+      <p><strong>Poursuites d’études :</strong> <?= nl2br(htmlspecialchars($debouches['poursuite_etudes'])) ?></p>
     <?php endif; ?>
-</section>
+  </div>
+  <?php endif; ?>
+
+    <?php
+if (!empty($etab['coordonnees'][0]) && !empty($etab['coordonnees'][1])):
+    $lat = $etab['coordonnees'][0];
+    $lon = $etab['coordonnees'][1];
+?>
+<div class="formation-section map">
+  <h3>Localisation de l’établissement</h3>
+  <div id="map" style="height: 300px; border-radius: 10px;"></div>
+</div>
+
+<!-- Leaflet CSS + JS -->
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+  crossorigin=""
+/>
+<script
+  src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+></script>
+
+<script>
+  // Variables globales pour map.js
+  window.mapLat = <?= json_encode($lat) ?>;
+  window.mapLon = <?= json_encode($lon) ?>;
+  window.mapZoom = 14;
+  window.mapMarkerLabel = <?= json_encode($etab['etablissement'] . ' - ' . ($etab['ville'] ?? '')) ?>;
+</script>
+
+<!-- Ton script personnalisé (après définition des variables) -->
+<script src="./js/map.js"></script>
 <?php endif; ?>
 
+</section>
 
 <?php require "./include/footer.inc.php"; ?>
