@@ -28,7 +28,7 @@ if(isset($_COOKIE['visited'])) {
 
     <header class="<?php echo $headerClass; ?>">
         <a href="/index.php" class="logo">
-            <img src="/images/favicon.png" alt="Logo personnel"/>
+            <img src="/images/favicon.png" alt="Logo personnel"/> 
         </a>
 
         <nav>
@@ -49,6 +49,7 @@ if(isset($_COOKIE['visited'])) {
                 <li><a href="#">A définir</a></li>
               </ul>
             </li>
+       <!-- test -->
 
             <li>
               <a href="apropos.php"><img src="images/fleche-droite.png" alt="Flèche" class="nav-icon">À propos</a>
