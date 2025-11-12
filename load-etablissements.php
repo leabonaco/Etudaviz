@@ -1,7 +1,7 @@
 <?php
 require './include/functions.inc.php';
 
-$limit = 5;
+$limit = 6;
 $page = (int)($_GET['page'] ?? 1);
 $offset = ($page - 1) * $limit;
 

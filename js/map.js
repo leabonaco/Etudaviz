@@ -14,9 +14,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const map = L.map("map").setView([lat, lon], zoom);
 
   // 4) Fond de carte
-  L.tileLayer("https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png", {
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     attribution: '&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors',
-    maxZoom: 18,
+    maxZoom: 19,
   }).addTo(map);
 
   // 5) Marqueur si coordonnées spécifiques passées depuis PHP
