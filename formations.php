@@ -6,7 +6,7 @@ $regionChoisie = $_GET['region'] ?? '';
 $departementChoisi = $_GET['departement'] ?? '';
 $typeChoisi = $_GET['type'] ?? '';
 $search = $_GET['search'] ?? '';
-$limit = 5; // <= essentiel pour le test du bouton
+$limit = 6; // <= essentiel pour le test du bouton
 
 // Données pour le formulaire
 $regions = getRegionsDepuisAPI();
@@ -118,30 +118,22 @@ require "./include/header.inc.php";
                     </form>
                 </div>
             </div>
+            <?php if ($messageErreur): ?>
+                <p><?= htmlspecialchars($messageErreur) ?></p>
+            <?php else: ?>
 
-
-        <?php if ($messageErreur): ?>
-            <p><?= htmlspecialchars($messageErreur) ?></p>
-        <?php else: ?>
-
-
-            <ul id="etablissement-list">
-                <?php foreach ($resultats as $etab): ?>
-                    <?= renderEtablissementCard($etab) ?>
-                <?php endforeach; ?>
-            </ul>
-
-            <?php if (count($resultats) === $limit): ?>
-                <div class="results">
-                    <button id="voir-plus" data-page="2">Voir plus</button>
-                </div>
+                <ul id="etablissement-list">
+                    <?php foreach ($resultats as $etab): ?>
+                        <?= renderEtablissementCard($etab) ?>
+                    <?php endforeach; ?>
+                </ul>
+                <?php if (count($resultats) === $limit): ?>
+                    <div class="results">
+                        <button id="voir-plus" data-page="2">Voir plus</button>
+                    </div>
+                <?php endif; ?>   
             <?php endif; ?>
-
-            
-        <?php endif; ?>
-
         </div>
-
     </section>
 
     <script>
