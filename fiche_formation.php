@@ -105,22 +105,14 @@ require "./include/header.inc.php";
 
       <?php if (!empty($etab['lien'])): ?>
         <li><strong>Fiche Parcoursup :</strong> 
-          <a href="<?= htmlspecialchars($etab['lien']) ?>" target="_blank" rel="noopener">
-            Consulter la fiche
-          </a>
+          <a href="<?= htmlspecialchars($etab['lien']) ?>" target="_blank" rel="noopener">Consulter la fiche</a>
         </li>
       <?php endif; ?>
     </ul>
 
     <div class="formation-description">
-      <p>
-        Cette formation associe enseignements théoriques et mises en pratique 
-        à travers des projets concrets et, selon le parcours, des stages en milieu professionnel. 
-        Les contenus varient d’un établissement à l’autre et peuvent inclure des modules d’ouverture 
-        vers d’autres disciplines.
-      </p>
-      <p>
-        Les étudiants développent ainsi à la fois des savoirs fondamentaux et des compétences 
+      <p>Cette formation associe enseignements théoriques et mises en pratique à travers des projets concrets et, selon le parcours, des stages en milieu professionnel. 
+        Les contenus varient d’un établissement à l’autre et peuvent inclure des modules d’ouverture vers d’autres disciplines. Les étudiants développent ainsi à la fois des savoirs fondamentaux et des compétences 
         directement mobilisables dans leur futur environnement professionnel.
       </p>
     </div>

@@ -5,26 +5,33 @@
   require "./include/header.inc.php";
 ?>
 
+
+
     <section class="hero-section">
         <div class="hero-container">
             <div class="hero-text">
-            <h2>Choisis ton avenir, pas par hasard </h2>
+                <h2>Ton futur mérite mieux que le hasard</h2>
                 <p>
-                    Etudaviz t’aide à <strong>découvrir des formations</strong>,
-                    <strong>comparer les parcours</strong> et lire les
-                    <strong>témoignages d’étudiants</strong> pour trouver la voie qui te correspond.
+                    Etudaviz t’accompagne dans la construction de ton avenir.
+                    Découvre les formations qui te correspondent, explore les parcours possibles après le bac et 
+                    inspire-toi des témoignages d’étudiants qui ont trouvé leur voie.
+                    Que tu sois lycéen, étudiant ou en prépa, fais le bon choix grâce à des informations claires, fiables et à ton rythme.
                 </p>
-                <p>ceci est un test
-</p>
                 <div class="hero-buttons">
                     <a href="formations.php" class="btn-primary">Explorer les formations</a>
                     <a href="orientation.php" class="btn-secondary">Trouver ma voie</a>
                 </div>
             </div>
-
-            <div class="hero-image">
-                <img src="./images/construction.png" alt="Jeunes étudiants motivés découvrant leur avenir">
+            <div class="profil-buttons">
+                <h3 class="profil-title">Quel est ton profil&nbsp;?</h3>
+                    <div class="profil-grid">
+                        <a href="orientation.php?profil=lyceen" class="btn-profil lyceen"> Je suis lycéen</a>
+                        <a href="formations.php?profil=etudiant" class="btn-profil etudiant"> Je suis déjà en Etude Sup</a>
+                        <a href="formations.php?profil=cpge" class="btn-profil cpge"> Je suis en prépa (CPGE)</a>
+                        <a href="metiers.php" class="btn-profil metiers">Je veux découvrir des métiers</a>
+                    </div>
             </div>
+
         </div>
     </section>
 
