@@ -17,10 +17,10 @@ if(isset($_COOKIE['visited'])) {
     <meta name="description" content="<?php echo $description ?>" />
     <link rel="shortcut icon" type="image/png" href="/images/favicon.png"/>
     <title><?php echo $title ?></title>
-
     <link rel="stylesheet" href="/css/style.css">
-</head>
-
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Stack+Sans+Text:wght@200..700&display=swap" rel="stylesheet">
 <body>
     <a href="#">
         <img class="fleche" src="images/fleche.png" alt="image de fleche"/>
@@ -68,7 +68,7 @@ if(isset($_COOKIE['visited'])) {
 
        <!-- Zone droite : recherche + connexion -->
         <div class="header-right">
-            <form class="search-bar" action="recherche.php" method="get">
+            <form class="header-search-bar" action="recherche.php" method="get">
                 <input type="text" name="q" placeholder="Rechercher une formation..." />
                 <button type="submit"><span>🔍</span></button>
             </form>

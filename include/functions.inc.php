@@ -57,9 +57,8 @@ function buildEtablissementsApiParams(array $options = []): array
             ]
         ];
         if (isset($typeMap[$type])) {
-            $typeFacets = $typeMap[$type]; // on les injectera dans l’URL en répétant refine.tf
+            $typeFacets = $typeMap[$type]; 
         } else {
-            // fallback: on booste la recherche libre
             $base['q'] = trim(($base['q'] ?? '') . ' ' . $type);
         }
     }
@@ -72,11 +71,7 @@ function getEtablissementsSupPublics(array $options = []): array
     $built = buildEtablissementsApiParams($options);
     $base  = $built['base'];
     $tfFacets = $built['refine_tf'] ?? [];
-
-    // http_build_query pour la partie de base
     $query = http_build_query($base);
-
-    // On ajoute chaque refine.tf à la main pour éviter l’écrasement
     foreach ($tfFacets as $tf) {
         $query .= '&' . rawurlencode('refine.tf') . '=' . rawurlencode($tf);
     }
@@ -385,10 +380,64 @@ function getDebouchesDepuisOnisep(string $intitule, ?string $code = null): ?arra
     return null;
 }
 
+function getDBConnection() {
+    try {
+        $pdo = new PDO("mysql:host=localhost;dbname=etudaviz;charset=utf8", "root", ""); 
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        return $pdo;
+    } catch (PDOException $e) {
+        // ⚠️ Si la base n'est pas accessible, on renvoie null
+        return null;
+    }
+}
 
+/**
+ * Retourne le taux de satisfaction (%) des utilisateurs
+ * Si la BDD n’est pas disponible, renvoie NULL
+ */
+function getTauxSatisfaction() {
+    $pdo = getDBConnection();
+    if (!$pdo) return null; // 🧩 fallback si pas de BDD
 
+    try {
+        $query = $pdo->query("SELECT AVG(satisfaction) AS taux FROM avis");
+        $result = $query->fetch(PDO::FETCH_ASSOC);
+        return round($result['taux'], 1);
+    } catch (Exception $e) {
+        return null; // 🔒 sécurité supplémentaire
+    }
+}
 
+/**
+ * Retourne le nombre d’avis utilisateurs
+ */
+function getNombreAvis() {
+    $pdo = getDBConnection();
+    if (!$pdo) return null;
 
+    try {
+        $query = $pdo->query("SELECT COUNT(*) AS total FROM avis");
+        $result = $query->fetch(PDO::FETCH_ASSOC);
+        return (int) $result['total'];
+    } catch (Exception $e) {
+        return null;
+    }
+}
 
+/**
+ * Retourne le nombre de partenaires institutionnels
+ */
+function getNombrePartenaires() {
+    $pdo = getDBConnection();
+    if (!$pdo) return null;
+
+    try {
+        $query = $pdo->query("SELECT COUNT(*) AS total FROM partenaires");
+        $result = $query->fetch(PDO::FETCH_ASSOC);
+        return (int) $result['total'];
+    } catch (Exception $e) {
+        return null;
+    }
+}
 
 ?>
