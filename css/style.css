@@ -1,4 +1,3 @@
-/* Reset */
 * {
  margin: 0;
  padding: 0;
@@ -172,6 +171,8 @@ th {
   display: flex;
   align-items: center;
   gap: 15px;
+  flex-wrap: wrap;
+  max-width: 100%;
   margin-left: auto;
   margin-bottom: 0;
   padding-bottom: 0;
@@ -185,6 +186,8 @@ th {
   padding: 5px 10px;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
   transition: box-shadow 0.3s;
+  max-width: 100%;
+  overflow: hidden;
 }
 
 .header-search-bar input {
@@ -192,8 +195,9 @@ th {
   outline: none;
   padding: 8px 12px;
   border-radius: 20px;
-  width: 180px;
+  width: 100%;
   font-size: 14px;
+  max-width: 180px; /* ne dépassera jamais */
 }
 
 .header-search-bar button {
@@ -235,6 +239,8 @@ header {
   padding: 15px 40px;
   border-bottom: 1px solid rgba(87,117,144,0.25);
   gap: 30px;
+  flex-wrap: wrap;
+  overflow-x: hidden; /* sécurise */
 }
 
 header.visited {
@@ -1845,4 +1851,729 @@ section:nth-child(even) {
 
 .timeline-image img:hover {
     transform: scale(1.03);
+}
+
+
+/* =========================================================
+   📱 RESPONSIVE – VERSION MOBILE (max-width: 768px)
+   ========================================================= */
+@media (max-width: 768px) {
+
+  /* Structure globale */
+  body {
+    font-size: 14px;
+    line-height: 1.6;
+    padding: 0;
+    overflow-x: hidden;
+  }
+
+  main {
+    max-width: 100%;
+    margin: 10px auto;
+    padding: 0 10px;
+    display: block; /* évite les soucis liés à la grille sur mobile */
+  }
+
+  /* Titres */
+  h1 {
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+  }
+
+  h2 {
+    font-size: 1.4rem;
+    margin-bottom: 8px;
+  }
+
+  h3 {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+  }
+
+  /* Paragraphes */
+  p {
+    font-size: 0.95rem;
+    text-align: left; /* évite les rivières de texte sur petit écran */
+  }
+
+  /* Listes */
+  ul {
+    margin: 10px 0;
+    gap: 6px;
+  }
+
+  ul li {
+    font-size: 0.95rem;
+  }
+
+   /* ---------- BOUTONS ---------- */
+  button, .btn {
+    width: 100%;          /* les boutons prennent toute la largeur */
+    padding: 14px 0;      /* plus faciles à cliquer */
+    font-size: 1rem;
+  }
+
+  /* ---------- GROUPE CTA ---------- */
+  .cta-links {
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 15px;
+  }
+
+  .cta h2 {
+    font-size: 1.4rem;
+    margin-bottom: 15px;
+  }
+
+  .cta p {
+    font-size: 1rem;
+    margin-bottom: 20px;
+    text-align: left; /* plus lisible sur mobile */
+  }
+
+  /* ---------- TABLEAU ---------- */
+  table, thead, tbody, th, td, tr {
+    display: block;        /* transforme le tableau en blocs empilés */
+  }
+
+  tr {
+    margin-bottom: 15px;
+  }
+
+  th {
+    text-align: center;
+    font-size: 1rem;
+  }
+
+  td {
+    padding: 10px;
+    font-size: 0.95rem;
+    position: relative;
+  }
+
+  /* ---------- FLECHE UP ---------- */
+  .fleche {
+    padding: 8px;
+    bottom: 15px;
+    right: 15px;
+    margin: 0;
+  }
+
+  /* ---------- GROUPE DE RECHERCHE ---------- */
+  .header-right {
+     width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .header-search-bar {
+   width: 100%;
+  max-width: 280px;
+  }
+
+  .header-search-bar input {
+    width: 100%;         /* important */
+    font-size: 0.95rem;
+  }
+
+  .header-search-bar button {
+    font-size: 18px;
+  }
+
+  /* ---------- BOUTON CONNEXION ---------- */
+  .btn-connexion {
+     width: 100%;
+  max-width: 280px;
+  text-align: center;
+  }
+
+  /* ---------- HEADER ---------- */
+  header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 20px 10px;
+  gap: 20px;
+  text-align: center;
+  overflow-x: hidden;
+}
+
+ header img {
+  width: 65px;
+  height: auto;
+}
+
+  /* ---------- NAVIGATION ---------- */
+  nav {
+    width: 100%;
+  } 
+
+  nav ul {
+    flex-direction: column;
+    gap: 12px;
+    margin-left: 0;
+    width: 100%;
+  }
+
+   nav ul.menu {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+  padding: 0;
+  margin: 0;
+}
+  nav ul.menu > li > a {
+    padding: 8px 0;
+  }
+
+  /* Icônes plus larges cliquables */
+  .nav-icon {
+    width: 18px;
+    height: 18px;
+  }
+
+  /* Sous-menu : passe en bloc plutôt qu'en position absolue */
+ nav ul.submenu {
+  margin-top: 5px;
+  padding-left: 15px;
+  width: 100%;
+  position: static;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+  nav ul.submenu li a {
+    padding: 6px 0;
+    background: none;
+    color: #277DA1;
+  }
+
+  nav ul.submenu li a:hover {
+    background-color: #43AA8B22;
+  }
+
+  /* ---------- FOOTER ---------- */
+  footer {
+    padding: 25px 15px;
+  }
+
+  .footer-infos,
+  .footer-links {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .footer-names span,
+  .footer-infos span {
+    font-size: 13px;
+  }
+
+  .footer-socials {
+    margin-top: 10px;
+  }
+
+  .footer-socials a .social {
+    font-size: 20px;
+  }
+
+  .footer-links a {
+    font-size: 12px;
+  }
+
+  /* Structure générale de la section */
+  .hero-section {
+    padding: 40px 5%;
+    text-align: center;
+  }
+
+  .hero-container {
+    flex-direction: column;   /* colonnes → vertical */
+    gap: 40px;
+    padding: 40px 5%;
+  }
+
+  .hero-text,
+  .profil-buttons {
+    min-width: 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    flex: 1 1 100% !important;
+     min-width: unset;
+  }
+
+  .hero-text h2 {
+    font-size: 2rem;           /* réduction du énorme titre */
+    line-height: 1.3;
+    text-align: center;
+  }
+
+  .hero-text p {
+    font-size: 1rem;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  /* Boutons hero */
+  .hero-buttons {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .hero-buttons a {
+    width: 100%;
+    padding: 12px 0;
+    font-size: 1rem;
+  }
+
+  /* Image hero */
+  .hero-image img {
+    max-width: 320px;
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  /* ---------- PROFIL BUTTONS ---------- */
+  .profil-buttons {
+    flex: 1 1 100%;
+    padding: 10px 0;
+  }
+
+  .profil-title {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+  }
+
+  .profil-grid {
+    gap: 12px;
+  }
+
+  .btn-profil {
+    width: 100%;
+    max-width: 300px;
+    padding: 14px 0;
+    font-size: 1rem;
+  }
+
+  /* ---------- SECTION SERVICES ---------- */
+  .services-title {
+    font-size: 1.6rem;
+    margin-bottom: 40px;
+  }
+
+  .service-block {
+    flex-direction: column;
+    gap: 30px;
+    padding: 20px;
+    text-align: center;       /* plus naturel sur mobile */
+  }
+
+  .service-image,
+  .service-text {
+    min-width: unset;
+    flex: 1 1 100%;
+  }
+
+  .service-text h3 {
+    font-size: 1.4rem;
+  }
+
+  .service-text p {
+    font-size: 1rem;
+    margin-bottom: 15px;
+  }
+
+  .service-image img {
+    max-width: 340px;
+    margin: 0 auto;
+  }
+
+  /* ---------- PAGE LOGIN ---------- */
+  .login-container {
+    height: auto;
+    padding: 40px 5%;
+  }
+
+  .login-box {
+    width: 100%;
+    max-width: 320px;
+    padding: 30px 20px;
+  }
+
+  .login-box h2 {
+    font-size: 1.6rem;
+    margin-bottom: 20px;
+  }
+
+  .login-box input {
+    font-size: 14px;
+    padding: 10px;
+  }
+
+  .login-box button {
+    font-size: 15px;
+    padding: 12px 0;
+  }
+
+  .login-box a {
+    font-size: 12px;
+  }
+
+  /* ---------- SECTION RESULTATS ---------- */
+  .results {
+    gap: 15px;
+  }
+
+  .result-item {
+    padding: 18px 14px;
+  }
+
+  .result-item h3 {
+    font-size: 1.2rem;
+  }
+
+  .result-item p {
+    font-size: 0.95rem;
+  }
+
+  .result-item a {
+    display: inline-block;
+    width: 100%;
+    padding: 10px 0;
+    font-size: 0.9rem;
+  }
+
+  /* ---------- SECTION AVIS ---------- */
+  .avis {
+    margin: 40px 15px;
+    padding: 25px;
+  }
+
+  .avis h2 {
+    font-size: 1.7rem;
+    margin-bottom: 30px;
+  }
+
+  .quote {
+    font-size: 1.1rem;
+    margin-left: 0;
+    text-align: center;
+  }
+
+  .author {
+    margin-left: 0;
+    text-align: center;
+    font-size: 0.95rem;
+  }
+
+  /* ---------- SEARCH BAR (mix des deux versions) ---------- */
+  .search-bar {
+    margin: 20px 0;
+    width: 100%;
+  }
+
+  .search-bar form {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .search-bar input {
+    width: 100% !important;
+    max-width: none;
+    border-radius: 18px;
+    font-size: 1rem;
+    padding: 12px;
+  }
+
+  .search-bar button {
+    width: 100%;
+    margin-top: 10px;
+    border-radius: 18px;
+    font-size: 1rem;
+    padding: 12px;
+  }
+
+  /* ---------- MAP SECTION ---------- */
+  .map-title {
+    font-size: 1.6rem;
+  }
+
+  .map-intro {
+    padding: 0 10px;
+    font-size: 0.95rem;
+    margin-bottom: 20px;
+  }
+
+  #map {
+    height: 300px;        /* réduit pour mobile */
+    border-radius: 12px;
+  }
+
+  /* ---------- LAYOUT RESPONSIVE ---------- */
+  .layout {
+    padding: 0 15px 40px;
+    gap: 20px;
+  }
+
+  /* Filtres passent au-dessus des résultats */
+  .filters {
+    width: 100%;
+    flex: none;
+    padding: 15px;
+    border-radius: 12px;
+  }
+
+  /* Bouton "ouvrir les filtres" toujours visible */
+  .filter-toggle {
+    width: 100%;
+    justify-content: center;
+    margin-left: 0;
+    padding: 12px 0;
+    border-radius: 25px;
+    font-size: 1rem;
+  }
+
+  /* ---------- RESULTS LIST ---------- */
+  .results {
+    width: 100%;
+  }
+
+  .results li {
+    padding: 12px;
+    margin-bottom: 15px;
+  }
+
+  .results button#voir-plus {
+    width: 100%;
+    padding: 12px 0;
+    border-radius: 8px;
+  }
+
+  /* ---------- MODAL ---------- */
+  .modal {
+    top: 10px;
+    width: 100%;
+    padding: 0 10px;
+    justify-content: center;
+  }
+
+  .modal-content {
+    width: 100%;
+    max-width: 350px;
+    padding: 22px 18px;
+  }
+
+  .close-button {
+    font-size: 22px;
+    top: 8px;
+    right: 10px;
+  }
+
+  .apply-button,
+  .reset-button {
+    width: 100%;
+    padding: 12px 0;
+    font-size: 1rem;
+  }
+
+  /* ---------- CARTE ETABLISSEMENT ---------- */
+  .etab-card {
+    padding: 14px;
+    margin-bottom: 16px;
+  }
+
+  .etab-card h4 {
+    font-size: 1.1rem;
+  }
+
+  .etab-card p {
+    font-size: 0.9rem;
+  }
+
+  /* ---------- FICHE FORMATION ---------- */
+  .formation-detail {
+    padding: 0 10px;
+  }
+
+  .formation-section h4 {
+    font-size: 1rem;
+  }
+
+  .formation-links {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .formation-links a,
+  .btn-site,
+  .btn-parcoursup {
+    width: 100%;
+    text-align: center;
+    padding: 12px 0;
+    font-size: 1rem;
+  }
+
+  /* ---------- PRESENTATION FORMATION ---------- */
+  .presentation {
+    padding: 20px;
+    margin-bottom: 30px;
+  }
+
+  .presentation h3 {
+    font-size: 1.3rem;
+    padding-bottom: 4px;
+  }
+
+  .presentation .intro {
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+
+  * ---------- PRESENTATION DETAILS ---------- */
+  .presentation-details li {
+    font-size: 0.9rem;
+    padding: 10px 12px;
+  }
+
+  .formation-description p {
+    font-size: 0.95rem;
+  }
+
+  /* ---------- DISTANCE CALCULATOR ---------- */
+  .distance-calculator {
+    padding: 12px 14px;
+  }
+
+  .distance-form {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .distance-form input,
+  .distance-form button {
+    width: 100%;
+    font-size: 1rem;
+    padding: 10px;
+  }
+
+  .distance-result {
+    font-size: 1rem;
+  }
+
+  .distance-info {
+    padding: 12px;
+    font-size: 0.9rem;
+  }
+
+  /* ---------- ZONE VERROUILLEE ---------- */
+  .distance-locked {
+    padding: 18px;
+  }
+
+  .distance-locked p {
+    font-size: 0.9rem;
+    text-align: center;
+  }
+
+  .locked-actions {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .locked-actions .btn-link {
+    width: 100%;
+    text-align: center;
+    padding: 10px 0;
+  }
+
+  /* ---------- ORIENTATION HERO ---------- */
+  .orientation-hero {
+    padding: 40px 5%;
+    text-align: center;
+  }
+
+  .orientation-hero-container {
+    flex-direction: column;
+    gap: 40px;
+    text-align: center;
+  }
+
+  .orientation-hero-text {
+    flex: 1 1 100%;
+    text-align: center;
+  }
+
+  .orientation-hero-text h2 {
+    font-size: 2rem;
+  }
+
+  .orientation-hero-text p {
+    font-size: 1rem;
+    line-height: 1.5;
+    margin-bottom: 20px;
+  }
+
+  .orientation-hero-image {
+    flex: 1 1 100%;
+  }
+
+  .orientation-hero-image img {
+    max-width: 320px;
+    width: 100%;
+    margin: 0 auto;
+  }
+
+
+  /* ---------- TIMELINE ---------- */
+  .orientation-timeline {
+    margin: 50px auto;
+  }
+
+  /* Ligne centrale déplacée à gauche */
+  .timeline::before {
+    left: 20px;
+    transform: none;
+    width: 3px;
+  }
+
+  .timeline {
+    gap: 50px;
+  }
+
+  .timeline-item {
+    flex-direction: column !important; /* override alternance */
+    gap: 20px;
+    align-items: flex-start;
+    padding-left: 40px; /* espace pour la ligne */
+  }
+
+  /* Contenu */
+  .timeline-content {
+    width: 100%;
+    padding: 20px;
+    border-left: 4px solid #277DA1;
+  }
+
+  .timeline-content h3 {
+    font-size: 1.3rem;
+  }
+
+  .timeline-content p {
+    font-size: 0.95rem;
+  }
+
+  /* Images */
+  .timeline-image img {
+    width: 100%;
+    max-width: 300px;
+    height: auto;
+    margin-left: 0;
+    border-radius: 12px;
+  }
 }

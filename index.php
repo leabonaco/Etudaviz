@@ -203,9 +203,7 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="./js/map.js"></script>
-<script>
-  const etablissementsAleatoires = <?= json_encode($etablissementsAleatoires, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) ?>;
-</script>
+
 <script src="./js/counter.js"></script>
 
 <?php
