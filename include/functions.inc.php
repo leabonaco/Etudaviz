@@ -1,4 +1,5 @@
 <?php
+include __DIR__ . "/../../config/bdconnect.php";
 
 include __DIR__ . "/../../config/bdconnect.php";
 
