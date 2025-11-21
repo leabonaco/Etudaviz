@@ -5,8 +5,8 @@
 
   const darkHref = "css/style_nuit.css";
   const lightHref = "css/style.css";
-  const sunIcon = "img/soleil.png";
-  const moonIcon = "img/lune.png";
+  const sunIcon = "/images/soleil.png";
+  const moonIcon = "/images/lune.png";
 
   function setTheme(theme){
     if(theme === "dark"){

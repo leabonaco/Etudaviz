@@ -74,7 +74,7 @@ if(isset($_COOKIE['visited'])) {
                 <button type="submit"><span>🔍</span></button>
             </form>
             <button id="theme-toggle" class="theme-toggle" aria-label="Changer le thème">
-                 <img id="theme-icon" src="images/soleil.png" alt="Mode clair">
+                 <img id="theme-icon" src="/images/soleil.png" alt="Mode clair">
             </button>
 
             <a href="login.php" class="btn-connexion">Connexion</a>
