@@ -445,7 +445,7 @@ function getFranceTravailAccessToken() {
     $clientId = "PAR_malbrunalwaysdatanet_de07e6739e2412366eaa75b683e3ebf844107c6173c733fd44b9d0822420edef";
     $clientSecret = "d9d31cae50ebca6fa275c3aaa543b9bbfbc74a910cd123e27f03bf6e6e78b13a";
 
-    $url = "https://api.francetravail.fr/connexion/oauth2/access_token?realm=/partenaire";
+    $url = "https://entreprise.francetravail.fr/connexion/oauth2/access_token?realm=/partenaire";
 
     $postFields = http_build_query([
         "grant_type" => "client_credentials",
