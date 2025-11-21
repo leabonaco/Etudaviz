@@ -34,7 +34,7 @@ if(isset($_COOKIE['visited'])) {
         <nav>
           <ul class="menu">
             <li>
-              <a href="formations.php"><img src="images/fleche-droite.png" alt="Flèche" class="nav-icon">Formations</a>
+              <a href="/formations.php"><img src="/images/fleche-droite.png" alt="Flèche" class="nav-icon">Formations</a>
               <ul class="submenu">
                 <li><a href="formations.php?region=&departement=&type=Formations+en+universit%C3%A9">Université</a></li>
                 <li><a href="formations.php?region=&departement=&type=BTS+-+BTSA+-+BTSM">BTS</a></li>
@@ -42,7 +42,7 @@ if(isset($_COOKIE['visited'])) {
             </li>
             
             <li>
-              <a href="orientation.php"><img src="images/fleche-droite.png" alt="Flèche" class="nav-icon">Apprendre à s'orienter</a>
+              <a href="/orientation.php"><img src="/images/fleche-droite.png" alt="Flèche" class="nav-icon">Apprendre à s'orienter</a>
               <ul class="submenu">
                 <li><a href="#">A définir</a></li>
                 <li><a href="#">A définir</a></li>
@@ -52,7 +52,7 @@ if(isset($_COOKIE['visited'])) {
        <!-- test -->
 
             <li>
-              <a href="apropos.php"><img src="images/fleche-droite.png" alt="Flèche" class="nav-icon">À propos</a>
+              <a href="/apropos.php"><img src="/images/fleche-droite.png" alt="Flèche" class="nav-icon">À propos</a>
               <ul class="submenu">
                 <li><a href="#">A définir</a></li>
                 <li><a href="#">A définir</a></li>
@@ -61,7 +61,7 @@ if(isset($_COOKIE['visited'])) {
             </li>
 
             <li>
-              <a href="contact.php"><img src="images/fleche-droite.png" alt="Flèche" class="nav-icon">Contact</a>
+              <a href="/contact.php"><img src="/images/fleche-droite.png" alt="Flèche" class="nav-icon">Contact</a>
             </li>
           </ul>
         </nav>
@@ -73,7 +73,7 @@ if(isset($_COOKIE['visited'])) {
                 <input type="text" name="q" placeholder="Rechercher une formation..." />
                 <button type="submit"><span>🔍</span></button>
             </form>
-            <a href="login.php" class="btn-connexion">Connexion</a>
+            <a href="/auth/login.php" class="btn-connexion">Connexion</a>
         </div>
     </header>
 

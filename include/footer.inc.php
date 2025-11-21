@@ -27,10 +27,10 @@
         <!-- Icônes réseaux -->
         <div class="footer-socials">
             <a href="https://facebook.com" target="_blank" aria-label="Facebook">
-                <img class="social" src="images/facebookicon.png" alt="Logo Facebook"/>
+                <img class="social" src="/images/facebookicon.png" alt="Logo Facebook"/>
             </a>
             <a href="https://instagram.com" target="_blank" aria-label="Instagram">
-                <img class="social" src="images/instaicon.png" alt="Logo Instagram"/>
+                <img class="social" src="/images/instaicon.png" alt="Logo Instagram"/>
             </a>
             
         </div>

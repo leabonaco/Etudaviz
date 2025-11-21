@@ -2,10 +2,11 @@
 $title = "Connexion";
 $description = "Page permettant de se connecter à votre compte Etudaviz";
 $h1 = "Connexion à votre espace Etudaviz";
-require "./include/header.inc.php";
-require "./include/db_connect.php";
+require "../include/header.inc.php";
+require  "../include/functions.inc.php";
+//require "../include/db_connect.php";
 
-session_start();
+ensureSession();
 $erreur = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -13,23 +14,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = trim($_POST['email'] ?? '');
     $password = $_POST['password'] ?? '';
 
-    if (!empty($email) && !empty($password)) {
-        // Vérification en base
-        $stmt = $pdo->prepare("SELECT * FROM utilisateurs WHERE email = ?");
-        $stmt->execute([$email]);
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        if (!empty($email) && !empty($password)) {
+        // Vérification dans le CSV (functions.inc.php)
+        $user = verifyLoginCsv($email, $password);
 
-        if ($user) {
-            // Vérifie le mot de passe hashé
-            if (password_verify($password, $user['mot_de_passe'])) {
-                // Connexion réussie → on stocke la session
-                $_SESSION['user_id'] = $user['id'];
-                $_SESSION['email'] = $user['email'];
-                header('Location: espace_utilisateur.php');
-                exit;
-            } else {
-                $erreur = "Email ou mot de passe incorrect.";
-            }
+        if ($user !== null) {
+            // Connexion réussie → on stocke l'utilisateur en session
+            loginUser($user);
+            header('Location: espace_utilisateur.php');
+            exit;
         } else {
             $erreur = "Email ou mot de passe incorrect.";
         }
@@ -60,4 +53,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 </div>
 
-<?php require "./include/footer.inc.php"; ?>
+<?php require "../include/footer.inc.php"; ?>
