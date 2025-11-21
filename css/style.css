@@ -1846,3 +1846,24 @@ section:nth-child(even) {
 .timeline-image img:hover {
     transform: scale(1.03);
 }
+
+/* =========================================================
+    BOUTON THEME TOGGLE
+   ========================================================*/
+.theme-toggle{
+  width: 40px;
+  height: 40px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+}
+.theme-toggle img{
+  width: 22px;
+  height: 22px;
+}
+.theme-toggle:hover{
+  background: rgba(0,0,0,0.08);
+}
