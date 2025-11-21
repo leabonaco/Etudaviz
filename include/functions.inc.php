@@ -1,5 +1,7 @@
 <?php
 
+include __DIR__ . "/../../config/bdconnect.php";
+
 function incrementCounter(): int {
     $file = __DIR__ . '/counter.txt';
     if (!file_exists($file)) file_put_contents($file, '0');
