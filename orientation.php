@@ -5,64 +5,136 @@ $description = "Découvre les parcours, métiers et outils pour mieux t’orient
 $h1          = "Comment apprendre à s'orienter ?";
 require "./include/header.inc.php";
 
-$profil = $_GET['profil'] ?? null;
-
-// ------- Personnalisation dynamique -------
-$profilsData = [
-    "lyceen" => [
-        "titre" => "Lycéen ? Prépare ton avenir dès aujourd’hui 🎓",
-        "texte" => "Tu veux anticiper ton orientation après le bac ? Explore les formations, les parcours possibles et découvre les témoignages d’étudiants qui ont trouvé leur voie.",
-        "cta"   => "<a href='formations.php?type=bac' class='btn-primary'>Explorer les formations post-bac</a>",
-        "image" => "./images/lyceen.jpg"
-    ],
-    "etudiant" => [
-        "titre" => "Déjà étudiant ? Trace ton propre chemin 🚀",
-        "texte" => "Réorientation, passerelles, formations complémentaires : découvre les options qui te ressemblent pour construire un projet solide.",
-        "cta"   => "<a href='formations.php?type=etudesup' class='btn-primary'>Voir les parcours compatibles</a>",
-        "image" => "./images/etudiant.jpg"
-    ],
-    "cpge" => [
-        "titre" => "En prépa ? Oriente ton futur avec confiance 🧠",
-        "texte" => "Les débouchés après une CPGE sont variés ! Explore les écoles, les formations et les retours d’anciens étudiants.",
-        "cta"   => "<a href='formations.php?type=cpge' class='btn-primary'>Voir les débouchés</a>",
-        "image" => "./images/cpge.jpg"
-    ],
-    "metiers" => [
-        "titre" => "Découvre les métiers faits pour toi 💼",
-        "texte" => "Tu ne sais pas encore vers quoi te diriger ? Explore des centaines de fiches métiers illustrées pour trouver ta voie.",
-        "cta"   => "<a href='metiers.php' class='btn-primary'>Explorer les métiers</a>",
-        "image" => "./images/metiers.jpg"
-    ]
-];
-
-// Valeurs par défaut
-$hero = $profilsData[$profil] ?? [
-    "titre" => "Trouve ta voie avec Étudaviz 🌟",
-    "texte" => "Dis-nous qui tu es pour accéder à des ressources personnalisées : formations, parcours, métiers et témoignages d’étudiants.",
-    "cta"   => "<a href='#profils' class='btn-primary'>Choisir mon profil</a>",
-    "image" => "./images/orientation.jpg"
-];
 ?>
 
-<!-- ============================= -->
-<!-- HERO ORIENTATION -->
-<!-- ============================= -->
-<section class="orientation-hero">
-  <div class="orientation-hero-container">
-    <div class="orientation-hero-text">
-      <h2><?= $hero["titre"] ?></h2>
-      <p><?= $hero["texte"] ?></p>
-      <?= $hero["cta"] ?>
+  <section class="orientation-hero">
+      <div class="orientation-hero-wrapper">
+
+          <div class="orientation-hero-left">
+              <h2 class="orientation-hero-title">
+                  Trouve ta voie avec Étudaviz 🌟
+              </h2>
+              <p class="orientation-hero-subtext">
+                  Ici, pas besoin d’avoir déjà un projet précis : notre objectif est simple —
+                  t’aider à comprendre qui tu es, découvrir des parcours possibles et avancer
+                  étape par étape vers un choix d’orientation éclairé.
+              </p>
+              <div class="orientation-hero-cta">
+                  <a href="#profils">Choisir mon profil</a>
+                  <a href="test-orientation.php" class="btn-primary">🔥 Faire le test d’orientation</a>
+              </div>
+              <p class="orientation-hero-note">
+                  Tu n’es pas seul : on t’accompagne du début jusqu’au choix final. 🌱
+              </p>
+          </div>
+          <div class="orientation-hero-right">
+              <img src="./images/orientation.jpg" alt="Illustration orientation">
+          </div>
+
+      </div>
+  </section>
+
+
+
+<section class="parcours-section">
+    <h2 class="parcours-title">Comprendre ton parcours après le bac 🎓</h2>
+    <p class="parcours-subtitle">
+        En un coup d'œil, visualise comment se déroulent les grandes étapes des études supérieures.
+    </p>
+
+    <div class="parcours-timeline">
+      <div class="parcours-step" data-step>
+          <div class="step-header">
+              <div class="step-number">1</div>
+              <h3>L’entrée dans les études supérieures</h3>
+              <button class="toggle-step">+</button>
+          </div>
+
+    <div class="step-content">
+
+        <p class="step-intro">
+            L’enseignement supérieur, c’est un nouveau rythme et plus d’autonomie.  
+            Voici ce qui change vraiment quand tu quittes le lycée :
+        </p>
+
+        <div class="step-highlights">
+
+            <div class="highlight-box">
+                <span>📘</span>
+                <p><strong>Un nouveau rythme</strong><br>
+                CM pour les cours théoriques, TD/TP pour pratiquer.  
+                Moins d’encadrement, plus d’organisation personnelle.</p>
+            </div>
+
+            <div class="highlight-box">
+                <span>🧠</span>
+                <p><strong>Des projets concrets</strong><br>
+                Travaux en groupe, dossiers réels, oraux, mises en situation…  
+                On applique ce qu’on apprend.</p>
+            </div>
+
+            <div class="highlight-box">
+                <span>💼</span>
+                <p><strong>Des stages</strong><br>
+                Selon ta filière : stages obligatoires, missions, rencontres pro.  
+                Parfait pour découvrir ce qui te plaît (ou pas !).</p>
+            </div>
+
+            <div class="highlight-box">
+                <span>🎓</span>
+                <p><strong>Une vraie vie étudiante</strong><br>
+                Associations, soirées, clubs, sport, projets…  
+                Tu t’intègres, tu rencontres du monde, tu développes ton réseau.</p>
+            </div>
+
+            <div class="highlight-box">
+                <span>💸</span>
+                <p><strong>Plus d’autonomie</strong><br>
+                Logement, budget, repas, organisation.  
+                Mais aussi des aides : APL, bourses, jobs étudiants.</p>
+            </div>
+        </div>
+      </div>
     </div>
-    <div class="orientation-hero-image">
-      <img src="<?= $hero["image"] ?>" alt="">
+
+        <!-- Séparateur Illustré -->
+        <div class="parcours-connector">
+            <span class="connector-line"></span>
+            <span class="connector-line"></span>
+        </div>
+
+        <!-- Étape 5 -->
+        <div class="parcours-step" data-step>
+            <div class="step-header">
+                <div class="step-number">3</div>
+                <h3>Après ton diplôme : que se passe-t-il ensuite ?</h3>
+                <button class="toggle-step">+</button>
+            </div>
+
+            <div class="step-content">
+                <p>
+                    Une fois ton diplôme obtenu, plusieurs chemins s’ouvrent à toi selon tes envies
+                    et ton projet professionnel.
+                </p>
+
+                <ul class="step-points">
+                    <li><strong>Poursuites d’études :</strong> licence → master, BTS → bachelor, BUT → master</li>
+                    <li><strong>Insertion pro :</strong> métiers techniques, santé, business, numérique…</li>
+                    <li><strong>Évolution :</strong> spécialisation, concours, école d’ingénieur/de commerce…</li>
+                </ul>
+
+                <a href="formations.php" class="step-btn">Explorer les formations →</a>
+            </div>
+        </div>
+
     </div>
-  </div>
 </section>
 
-<!-- ============================= -->
-<!-- PHASE 1 — COMPRENDRE L'ORIENTATION -->
-<!-- ============================= -->
+
+
+
+
+
 <section class="orientation-timeline">
   <h2>Comment avancer dans ton orientation ? 🌱</h2>
 
@@ -109,9 +181,6 @@ $hero = $profilsData[$profil] ?? [
   </div>
 </section>
 
-<!-- ============================= -->
-<!-- PHASE 2 — CHOISIR TON PROFIL -->
-<!-- ============================= -->
 <section id="profils" class="orientation-profil-section">
   <h2>Quel est ton profil ? 🔍</h2>
   <p class="subtitle">Accède à des contenus personnalisés en un clic.</p>
@@ -124,9 +193,7 @@ $hero = $profilsData[$profil] ?? [
   </div>
 </section>
 
-<!-- ============================= -->
-<!-- PHASE 3 — OUTILS -->
-<!-- ============================= -->
+
 <section class="orientation-tools">
   <h2>Nos outils pour t’aider à t’orienter 🧭</h2>
 
@@ -153,5 +220,20 @@ $hero = $profilsData[$profil] ?? [
     </div>
   </div>
 </section>
+
+<script>
+document.querySelectorAll('[data-step]').forEach(step => {
+    const btn = step.querySelector('.toggle-step');
+    const content = step.querySelector('.step-content');
+
+    btn.addEventListener('click', () => {
+        content.classList.toggle('open');
+        btn.textContent = content.classList.contains('open') ? "×" : "+";
+    });
+});
+</script>
+
+
+
 
 <?php require "./include/footer.inc.php"; ?>
