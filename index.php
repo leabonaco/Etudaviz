@@ -107,62 +107,41 @@
     </section>
 
 
-   <section class="services services-timeline">
-        <h2 class="services-title">Ton parcours sur Etudaviz 🧭</h2>
-
-        <div class="timeline">
-
-            <!-- Étape 1 -->
-            <div class="timeline-item">
-                <div class="timeline-content">
-                    <h3>1. Explorer les formations</h3>
-                    <p>
-                        Navigue parmi l’ensemble des parcours post-bac : BUT, BTS, licences universitaires,
-                        écoles spécialisées, formations sélectives ou accessibles via Parcoursup.
-                        Chaque fiche est mise à jour, vérifiée et expliquée pour t’aider à choisir en confiance.
-                    </p>
+    <section class="services">
+        <h2 class="services-title">Explore les rubriques clés 🧭</h2>
+        <div class="service-block">
+                <div class="service-text">
+                <h3>Formations</h3>
+                    <p>Découvre les parcours post-bac : BUT, BTS, licences, écoles spécialisées, alternance…</p>
                     <a href="formations.php" class="btn-link">Voir les formations →</a>
                 </div>
-                <div class="timeline-image">
+                <div class="service-image">
                     <img src="./images/formations.jpg" alt="Salle de cours avec étudiants">
                 </div>
-            </div>
+        </div>
 
-            <!-- Étape 2 -->
-            <div class="timeline-item">
-                <div class="timeline-image">
-                    <img src="./images/orientation.jpg" alt="Conseil orientation">
-                </div>
-                <div class="timeline-content">
-                    <h3>2. Trouver ton orientation</h3>
-                    <p>
-                        Tests d’intérêts, guides d’accompagnement, questions essentielles à se poser,
-                        décryptage des débouchés : tout pour mieux te connaître et construire un projet
-                        d’avenir qui te ressemble, sans pression et à ton rythme.
-                    </p>
+        <div class="service-block">
+            <div class="service-image">
+                <img src="./images/orientation.jpg" alt="Conseil orientation">
+            </div>
+            <div class="service-text">
+                <h3>Orientation</h3>
+                    <p>Mieux te connaître, comprendre les débouchés, poser les bonnes questions à temps.</p>
                     <a href="orientation.php" class="btn-link">En savoir plus →</a>
-                </div>
             </div>
+        </div>
 
-            <!-- Étape 3 -->
-            <div class="timeline-item">
-                <div class="timeline-content">
-                    <h3>3. Lire les avis d’étudiants</h3>
-                    <p>
-                        Découvre les expériences réelles d’étudiants qui sont passés par les mêmes étapes que toi :
-                        leurs réussites, leurs doutes, leurs conseils.  
-                        Un espace honnête et transparent pour t’aider à te projeter dans la bonne formation.
-                    </p>
+        <div class="service-block">
+            <div class="service-text">
+                <h3>Avis d’étudiants</h3>
+                    <p>Lis des témoignages honnêtes d’autres jeunes et partage ton retour d’expérience.</p>
                     <a href="avis.php" class="btn-link">Découvrir les avis →</a>
-                </div>
-                <div class="timeline-image">
-                    <img src="./images/community.jpg" alt="Communauté étudiante">
-                </div>
             </div>
-
+            <div class="service-image">
+                <img src="./images/community.jpg" alt="Communauté étudiante">
+            </div>
         </div>
     </section>
-
 
     <section class="avis">
         <h2>Ce qu’en disent les étudiants 🎓</h2>
