@@ -15,6 +15,7 @@ if(isset($_COOKIE['visited'])) {
     <meta name="author" content="Mathis Albrun" />
     <meta name="date" content="2025-03-06T22:44:25+0100" />
     <meta name="description" content="<?php echo $description ?>" />
+	<meta name="viewport" content="width=device-width, initial-scale=1"/>
     <link rel="shortcut icon" type="image/png" href="/images/favicon.png"/>
     <title><?php echo $title ?></title>
     <link id="theme-link" rel="stylesheet" href="css/style.css">
