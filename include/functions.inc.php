@@ -443,4 +443,75 @@ function getNombrePartenaires() {
     }
 }
 
+
+function getFranceTravailAccessToken() {
+    $clientId = "PAR_malbrunalwaysdatanet_de07e6739e2412366eaa75b683e3ebf844107c6173c733fd44b9d0822420edef";
+    $clientSecret = "d9d31cae50ebca6fa275c3aaa543b9bbfbc74a910cd123e27f03bf6e6e78b13a";
+
+    $url = "https://entreprise.francetravail.fr/connexion/oauth2/access_token?realm=/partenaire";
+
+    $postFields = http_build_query([
+        "grant_type" => "client_credentials",
+        "client_id" => $clientId,
+        "client_secret" => $clientSecret,
+        "scope" => "api_rome-metiersv1"
+    ]);
+
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $postFields);
+
+    $response = curl_exec($ch);
+    curl_close($ch);
+
+    return json_decode($response, true);
+}
+
+function searchMetierRome($token, $query)
+{
+    $url = "https://api.francetravail.io/partenaire/rome-metiers/v1/metiers/metier/recherche?" . http_build_query([
+        "q" => $query,
+        "op" => "OR",
+        "champs" => "libelle,code,riasecMajeur,riasecMineur"
+    ]);
+
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        "Authorization: Bearer $token",
+        "Accept: application/json"
+    ]);
+
+    $response = curl_exec($ch);
+    curl_close($ch);
+
+    $json = json_decode($response, true);
+
+    if (!$json) {
+        return ["error" => "JSON invalide", "raw" => $response];
+    }
+
+    return $json;
+}
+
+function getMetierDetails($token, $codeRome)
+{
+    $url = "https://api.francetravail.io/partenaire/rome-metiers/v1/metiers/" . urlencode($codeRome);
+
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        "Authorization: Bearer $token",
+        "Accept: application/json"
+    ]);
+
+    $response = curl_exec($ch);
+    curl_close($ch);
+
+    return json_decode($response, true);
+}
+
+
+
 ?>

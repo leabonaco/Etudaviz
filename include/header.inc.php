@@ -17,7 +17,7 @@ if(isset($_COOKIE['visited'])) {
     <meta name="description" content="<?php echo $description ?>" />
     <link rel="shortcut icon" type="image/png" href="/images/favicon.png"/>
     <title><?php echo $title ?></title>
-    <link rel="stylesheet" href="/css/style.css">
+    <link id="theme-link" rel="stylesheet" href="css/style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Stack+Sans+Text:wght@200..700&display=swap" rel="stylesheet">
@@ -73,6 +73,10 @@ if(isset($_COOKIE['visited'])) {
                 <input type="text" name="q" placeholder="Rechercher une formation..." />
                 <button type="submit"><span>🔍</span></button>
             </form>
+            <button id="theme-toggle" class="theme-toggle" aria-label="Changer le thème">
+                 <img id="theme-icon" src="/images/soleil.png" alt="Mode clair">
+            </button>
+
             <a href="login.php" class="btn-connexion">Connexion</a>
         </div>
     </header>
