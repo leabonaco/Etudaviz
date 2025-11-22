@@ -26,61 +26,92 @@ if(isset($_COOKIE['visited'])) {
     <a href="#">
         <img class="fleche" src="images/fleche.png" alt="image de fleche"/>
     </a>
+	<script>
+		// Affiche la flèche quand l'utilisateur scrolle
+		const fleche = document.querySelector('.fleche');
+		fleche.style.display = 'none';
+		window.addEventListener('scroll', function() {
+			if (window.scrollY > 100) { // tu peux ajuster la valeur
+				fleche.style.display = 'block';
+			} else {
+				fleche.style.display = 'none';
+			}
+		});
+	</script>
 
     <header class="<?php echo $headerClass; ?>">
-        <a href="/index.php" class="logo">
-            <img src="/images/favicon.png" alt="Logo personnel"/> 
-        </a>
+		<div class="header-left">
+			<a href="/index.php" class="logo">
+				<img src="/images/favicon.png" alt="Logo personnel"/> 
+			</a>
+			<button class="burger">☰</button> <!-- uniquement visible mobile -->
+			<script>
+				document.addEventListener('DOMContentLoaded', () => {
+					const burger = document.querySelector('.burger');
+					const menu = document.querySelector('nav ul.menu'); // bien cibler le <ul>
 
-        <nav>
-          <ul class="menu">
-            <li>
-              <a href="formations.php"><img src="images/fleche-droite.png" alt="Flèche" class="nav-icon">Formations</a>
-              <ul class="submenu">
-                <li><a href="formations.php?region=&departement=&type=Formations+en+universit%C3%A9">Université</a></li>
-                <li><a href="formations.php?region=&departement=&type=BTS+-+BTSA+-+BTSM">BTS</a></li>
-              </ul>
-            </li>
-            
-            <li>
-              <a href="orientation.php"><img src="images/fleche-droite.png" alt="Flèche" class="nav-icon">Apprendre à s'orienter</a>
-              <ul class="submenu">
-                <li><a href="#">A définir</a></li>
-                <li><a href="#">A définir</a></li>
-                <li><a href="#">A définir</a></li>
-              </ul>
-            </li>
-       <!-- test -->
+					burger.addEventListener('click', () => {
+						menu.classList.toggle('open');
+					});
 
-            <li>
-              <a href="apropos.php"><img src="images/fleche-droite.png" alt="Flèche" class="nav-icon">À propos</a>
-              <ul class="submenu">
-                <li><a href="#">A définir</a></li>
-                <li><a href="#">A définir</a></li>
-                <li><a href="#">A définir</a></li>
-              </ul>
-            </li>
+					document.querySelectorAll('.menu li').forEach(li => {
+						const submenu = li.querySelector('.submenu');
+						if(submenu){
+							li.addEventListener('click', e => {
+								if(window.innerWidth <= 768){
+									e.stopPropagation();
+									submenu.classList.toggle('open');
+								}
+							});
+						}
+					});
+				});
+			</script>
+		</div>
 
-            <li>
-              <a href="contact.php"><img src="images/fleche-droite.png" alt="Flèche" class="nav-icon">Contact</a>
-            </li>
-          </ul>
-        </nav>
+		<nav>
+			<ul class="menu">
+				<li>
+					<a href="formations.php"><img src="images/fleche-droite.png" alt="Flèche" class="nav-icon">Formations</a>
+					<ul class="submenu">
+						<li><a href="formations.php?region=&departement=&type=Formations+en+universit%C3%A9">Université</a></li>
+						<li><a href="formations.php?region=&departement=&type=BTS+-+BTSA+-+BTSM">BTS</a></li>
+					</ul>
+				</li>
+				<li>
+					<a href="orientation.php"><img src="images/fleche-droite.png" alt="Flèche" class="nav-icon">Apprendre à s'orienter</a>
+					<ul class="submenu">
+						<li><a href="#">A définir</a></li>
+						<li><a href="#">A définir</a></li>
+						<li><a href="#">A définir</a></li>
+					</ul>
+				</li>
+				<li>
+					<a href="apropos.php"><img src="images/fleche-droite.png" alt="Flèche" class="nav-icon">À propos</a>
+					<ul class="submenu">
+						<li><a href="#">A définir</a></li>
+						<li><a href="#">A définir</a></li>
+						<li><a href="#">A définir</a></li>
+					</ul>
+				</li>
+				<li>
+					<a href="contact.php"><img src="images/fleche-droite.png" alt="Flèche" class="nav-icon">Contact</a>
+				</li>
+			</ul>
+		</nav>
 
+		<div class="header-right">
+			<form class="header-search-bar" action="recherche.php" method="get">
+				<input type="text" name="q" placeholder="Rechercher une formation..." />
+				<button type="submit">🔍</button>
+			</form>
+			<button id="theme-toggle" class="theme-toggle" aria-label="Changer le thème">
+				<img id="theme-icon" src="/images/soleil.png" alt="Mode clair">
+			</button>
+			<a href="login.php" class="btn-connexion">Connexion</a>
+		</div>
+	</header>
 
-       <!-- Zone droite : recherche + connexion -->
-        <div class="header-right">
-            <form class="header-search-bar" action="recherche.php" method="get">
-                <input type="text" name="q" placeholder="Rechercher une formation..." />
-                <button type="submit"><span>🔍</span></button>
-            </form>
-            <button id="theme-toggle" class="theme-toggle" aria-label="Changer le thème">
-                 <img id="theme-icon" src="/images/soleil.png" alt="Mode clair">
-            </button>
-
-            <a href="login.php" class="btn-connexion">Connexion</a>
-        </div>
-    </header>
 
     <main>
         <h1><?php echo $h1 ?></h1>
