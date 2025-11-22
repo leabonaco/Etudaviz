@@ -1019,7 +1019,7 @@ section:nth-child(even) {
 
 /* 🟥 🟩 Layout principal */
 .layout {
-  display: flex;
+      display: contents;
   flex-direction: column;
   align-items: center;
   gap: 30px;
@@ -2766,6 +2766,7 @@ nav ul.menu {
   .search-bar {
     margin: 20px 0;
     width: 100%;
+	gap: 10px;
   }
 
   .search-bar form {
