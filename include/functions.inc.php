@@ -1,4 +1,7 @@
 <?php
+include __DIR__ . "/../../config/bdconnect.php";
+
+include __DIR__ . "/../../config/bdconnect.php";
 
 function incrementCounter(): int {
     $file = __DIR__ . '/counter.txt';
@@ -440,192 +443,75 @@ function getNombrePartenaires() {
     }
 }
 
-const USERS_CSV_FILE      = __DIR__ . '/../data/csv/password.csv';
-const USERS_CSV_DELIMITER = ';';
 
+function getFranceTravailAccessToken() {
+    $clientId = "PAR_malbrunalwaysdatanet_de07e6739e2412366eaa75b683e3ebf844107c6173c733fd44b9d0822420edef";
+    $clientSecret = "d9d31cae50ebca6fa275c3aaa543b9bbfbc74a910cd123e27f03bf6e6e78b13a";
 
-/**
- * Démarre la session si elle n'est pas déjà active.
- */
-function ensureSession(): void
-{
-    if (session_status() !== PHP_SESSION_ACTIVE) {
-        session_start();
-    }
+    $url = "https://entreprise.francetravail.fr/connexion/oauth2/access_token?realm=/partenaire";
+
+    $postFields = http_build_query([
+        "grant_type" => "client_credentials",
+        "client_id" => $clientId,
+        "client_secret" => $clientSecret,
+        "scope" => "api_rome-metiersv1"
+    ]);
+
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $postFields);
+
+    $response = curl_exec($ch);
+    curl_close($ch);
+
+    return json_decode($response, true);
 }
 
-/**
- * Retourne true si un utilisateur est connecté.
- */
-function isLoggedIn(): bool
+function searchMetierRome($token, $query)
 {
-    ensureSession();
-    return !empty($_SESSION['user_email']);
+    $url = "https://api.francetravail.io/partenaire/rome-metiers/v1/metiers/metier/recherche?" . http_build_query([
+        "q" => $query,
+        "op" => "OR",
+        "champs" => "libelle,code,riasecMajeur,riasecMineur"
+    ]);
+
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        "Authorization: Bearer $token",
+        "Accept: application/json"
+    ]);
+
+    $response = curl_exec($ch);
+    curl_close($ch);
+
+    $json = json_decode($response, true);
+
+    if (!$json) {
+        return ["error" => "JSON invalide", "raw" => $response];
+    }
+
+    return $json;
 }
 
-/**
- * Enregistre l'utilisateur connecté dans la session.
- * $user est typiquement un tableau associatif contenant au moins 'email'.
- */
-function loginUser(array $user): void
+function getMetierDetails($token, $codeRome)
 {
-    ensureSession();
-    $_SESSION['user_email'] = $user['email'];
+    $url = "https://api.francetravail.io/partenaire/rome-metiers/v1/metiers/" . urlencode($codeRome);
+
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        "Authorization: Bearer $token",
+        "Accept: application/json"
+    ]);
+
+    $response = curl_exec($ch);
+    curl_close($ch);
+
+    return json_decode($response, true);
 }
 
-/**
- * Déconnecte l'utilisateur : nettoie la session et le cookie.
- */
-function logoutUser(): void
-{
-    ensureSession();
-
-    $_SESSION = [];
-
-    if (ini_get('session.use_cookies')) {
-        $params = session_get_cookie_params();
-        setcookie(
-            session_name(),
-            '',
-            time() - 42000,
-            $params['path'],
-            $params['domain'],
-            $params['secure'],
-            $params['httponly']
-        );
-    }
-
-    session_destroy();
-}
-
-/**
- * À appeler en début de page "protégée".
- * Si l'utilisateur n'est pas connecté, il est redirigé vers $redirectUrl.
- */
-function requireLogin(string $redirectUrl = 'login.php'): void
-{
-    if (!isLoggedIn()) {
-        header('Location: ' . $redirectUrl);
-        exit;
-    }
-}
-
-/**
- * Retourne l'email de l'utilisateur connecté, ou null si personne.
- */
-function getLoggedUserEmail(): ?string
-{
-    return isLoggedIn() ? $_SESSION['user_email'] : null;
-}
-
-
-/**
- * S'assure que le fichier CSV existe avec un header correct.
- * Crée aussi le dossier parent si besoin.
- */
-function ensureUsersCsvExists(): void
-{
-    $csvFile = USERS_CSV_FILE;
-    $dir = dirname($csvFile);
-
-    if (!is_dir($dir)) {
-        mkdir($dir, 0775, true);
-    }
-
-    if (!file_exists($csvFile) || filesize($csvFile) === 0) {
-        $handle = fopen($csvFile, 'w');
-        if ($handle === false) {
-            throw new RuntimeException("Impossible de créer le fichier CSV des utilisateurs.");
-        }
-
-        fputcsv($handle, ['email', 'mot_de_passe'], USERS_CSV_DELIMITER);
-        fclose($handle);
-    }
-}
-
-/**
- * Recherche un utilisateur par email dans le CSV.
- * Retourne un tableau associatif (email, mot_de_passe, ...) ou null si non trouvé.
- */
-function findUserByEmailCsv(string $email): ?array
-{
-    ensureUsersCsvExists();
-
-    $handle = fopen(USERS_CSV_FILE, 'r');
-    if ($handle === false) {
-        return null;
-    }
-
-    $header = fgetcsv($handle, 0, USERS_CSV_DELIMITER);
-    if ($header === false) {
-        fclose($handle);
-        return null;
-    }
-
-    while (($row = fgetcsv($handle, 0, USERS_CSV_DELIMITER)) !== false) {
-        $assoc = array_combine($header, $row);
-        if ($assoc === false) {
-            continue;
-        }
-
-        if (isset($assoc['email']) && trim($assoc['email']) === $email) {
-            fclose($handle);
-            return $assoc;
-        }
-    }
-
-    fclose($handle);
-    return null;
-}
-
-/**
- * Crée un nouvel utilisateur dans le CSV.
- * - $plainPassword sera hashé avec password_hash()
- * Retourne true si OK, false en cas d'erreur.
- */
-function createUserCsv(string $email, string $plainPassword): bool
-{
-    ensureUsersCsvExists();
-
-    if (findUserByEmailCsv($email) !== null) {
-        return false;
-    }
-
-    $hash = password_hash($plainPassword, PASSWORD_DEFAULT);
-
-    $handle = fopen(USERS_CSV_FILE, 'a');
-    if ($handle === false) {
-        return false;
-    }
-
-    $result = fputcsv($handle, [$email, $hash], USERS_CSV_DELIMITER);
-    fclose($handle);
-
-    return $result !== false;
-}
-
-/**
- * Vérifie un login (email + mot de passe en clair) à partir du CSV.
- * - Si OK, retourne un tableau associatif représentant l'utilisateur.
- * - Si KO, retourne null.
- */
-function verifyLoginCsv(string $email, string $plainPassword): ?array
-{
-    $user = findUserByEmailCsv($email);
-    if ($user === null) {
-        return null;
-    }
-
-    if (!isset($user['password'])) {
-        return null;
-    }
-
-    if (password_verify($plainPassword, $user['password'])) {
-        return $user;
-    }
-
-    return null;
-}
 
 
 ?>
