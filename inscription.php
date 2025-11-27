@@ -1,4 +1,9 @@
 <?php
+
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 $title = "Inscription";
 $description = "Créer un compte Etudaviz";
 $h1 = "Créer votre compte Etudaviz";
@@ -37,11 +42,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $baseUrl = "https://" . $_SERVER['HTTP_HOST'];
                 $lienConnexion = $baseUrl . "/login.php";
 
-                if (sendVerificationMail($mail, $pseudo, $lienConnexion)) {
+                /*if (sendVerificationMail($mail, $pseudo, $lienConnexion)) {
                     $message = "Compte créé ! Un email de confirmation vous a été envoyé.";
                 } else {
                     $message = "Compte créé, mais impossible d'envoyer l'email de confirmation.";
-                }
+                }*/
+
+                $message = "Compte créé ! (test sans envoi d'email)";
 
                 captchaInit();
             }
