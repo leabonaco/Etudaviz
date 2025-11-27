@@ -623,10 +623,8 @@ function sendVerificationMail(string $to, string $pseudo, string $link): bool {
         $mail->Subject = 'Vérification de votre compte Etudaviz';
 
         $textBody = "Bonjour $pseudo,\n\n"
-                  . "Merci de vous être inscrit sur Etudaviz.\n"
-                  . "Pour activer votre compte, cliquez sur le lien suivant :\n"
-                  . "$link\n\n"
-                  . "Si vous n'êtes pas à l'origine de cette demande, ignorez ce message.\n";
+                . "Votre compte Etudaviz a bien été créé.\n"
+                . "Vous pouvez vous connecter ici :\n$link\n\n";
 
         $htmlBody = "<p>Bonjour <strong>$pseudo</strong>,</p>"
                   . "<p>Merci de vous être inscrit sur Etudaviz.</p>"
@@ -694,7 +692,7 @@ function validateRegistrationInput(
         return "Captcha incorrect.";
     }
 
-    return null; // tout est bon
+    return null; 
 }
 
 /**
