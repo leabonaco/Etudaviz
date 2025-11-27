@@ -1,7 +1,7 @@
 <?php
 include __DIR__ . "/../../config/bdconnect.php";
-
-include __DIR__ . "/../../config/bdconnect.php";
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 
 function incrementCounter(): int {
     $file = __DIR__ . '/counter.txt';
@@ -600,6 +600,143 @@ function verifyLoginDb(string $identifiant, string $password): ?array {
     }
     unset($user['mot_de_passe']);
     return $user;
+}
+
+function sendVerificationMail(string $to, string $pseudo, string $link): bool {
+    global $mail_host, $mail_port, $mail_username, $mail_password, $mail_from, $mail_from_name;
+
+    $mail = new PHPMailer(true);
+
+    try {
+        $mail->isSMTP();
+        $mail->Host       = $mail_host;
+        $mail->SMTPAuth   = true;
+        $mail->Username   = $mail_username;
+        $mail->Password   = $mail_password;
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS; 
+        $mail->Port       = $mail_port;
+        $mail->CharSet    = 'UTF-8';
+
+        $mail->setFrom($mail_from, $mail_from_name);
+        $mail->addAddress($to, $pseudo);
+
+        $mail->Subject = 'Vérification de votre compte Etudaviz';
+
+        $textBody = "Bonjour $pseudo,\n\n"
+                  . "Merci de vous être inscrit sur Etudaviz.\n"
+                  . "Pour activer votre compte, cliquez sur le lien suivant :\n"
+                  . "$link\n\n"
+                  . "Si vous n'êtes pas à l'origine de cette demande, ignorez ce message.\n";
+
+        $htmlBody = "<p>Bonjour <strong>$pseudo</strong>,</p>"
+                  . "<p>Merci de vous être inscrit sur Etudaviz.</p>"
+                  . "<p>Cliquez sur ce lien pour activer votre compte :</p>"
+                  . "<p><a href=\"$link\">Activer mon compte</a></p>"
+                  . "<p>Si vous n'êtes pas à l'origine de cette demande, ignorez ce message.</p>";
+
+        $mail->isHTML(true);
+        $mail->Body    = $htmlBody;
+        $mail->AltBody = $textBody;
+
+        $mail->send();
+        return true;
+
+    } catch (Exception $e) {
+        return false;
+    }
+}
+
+function captchaInit(): void {
+    ensureSession();
+    $a = random_int(1, 9);
+    $b = random_int(1, 9);
+    $_SESSION['captcha_result']   = $a + $b;
+    $_SESSION['captcha_question'] = "$a + $b";
+}
+
+function captchaQuestion(): string {
+    ensureSession();
+    return $_SESSION['captcha_question'] ?? "2 + 2";
+}
+
+function captchaCheck(string $answer): bool {
+    ensureSession();
+    if (!isset($_SESSION['captcha_result'])) {
+        return false;
+    }
+    return (int)$answer === (int)$_SESSION['captcha_result'];
+}
+
+/**
+ * Valide les champs d'inscription.
+ * Retourne un message d'erreur ou null si tout est OK.
+ */
+function validateRegistrationInput(
+    string $pseudo,
+    string $mail,
+    string $password,
+    string $password2,
+    string $captchaAnswer
+): ?string {
+    if ($pseudo === '' || $mail === '' || $password === '' || $password2 === '' || $captchaAnswer === '') {
+        return "Veuillez remplir tous les champs.";
+    }
+
+    if (!filter_var($mail, FILTER_VALIDATE_EMAIL)) {
+        return "Adresse mail invalide.";
+    }
+
+    if ($password !== $password2) {
+        return "Les mots de passe ne correspondent pas.";
+    }
+
+    if (!captchaCheck($captchaAnswer)) {
+        return "Captcha incorrect.";
+    }
+
+    return null; // tout est bon
+}
+
+/**
+ * Vérifie si le pseudo ou l’email est déjà utilisé en base.
+ */
+function isPseudoOrMailUsed(PDO $pdo, string $pseudo, string $mail): bool {
+    $sql = "SELECT COUNT(*) AS nb 
+            FROM Utilisateur 
+            WHERE pseudo = :pseudo OR mail = :mail";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([
+        'pseudo' => $pseudo,
+        'mail'   => $mail,
+    ]);
+
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $row && (int)$row['nb'] > 0;
+}
+
+/**
+ * Crée un utilisateur en base et retourne son id_utilisateur,
+ * ou null en cas d'erreur.
+ */
+function createUser(PDO $pdo, string $pseudo, string $mail, string $password): ?int {
+    $hash = password_hash($password, PASSWORD_DEFAULT);
+
+    // ici on met le compte directement "actif"
+    $sql = "INSERT INTO Utilisateur (pseudo, mail, mot_de_passe, date_inscription, statut_compte)
+            VALUES (:pseudo, :mail, :mot_de_passe, NOW(), 'actif')";
+
+    $stmt = $pdo->prepare($sql);
+    $ok = $stmt->execute([
+        'pseudo'       => $pseudo,
+        'mail'         => $mail,
+        'mot_de_passe' => $hash,
+    ]);
+
+    if (!$ok) {
+        return null;
+    }
+
+    return (int)$pdo->lastInsertId();
 }
 
 ?>
