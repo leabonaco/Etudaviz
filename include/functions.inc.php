@@ -513,5 +513,93 @@ function getMetierDetails($token, $codeRome)
 }
 
 
+function ensureSession(): void {
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
+}
+
+
+/**
+ * Enregistre l'utilisateur en session après une connexion réussie.
+ * $user doit contenir au moins id_utilisateur, pseudo, mail.
+ */
+function loginUser(array $user): void {
+    ensureSession();
+
+    $_SESSION['user'] = [
+        'id'     => $user['id_utilisateur'],
+        'pseudo' => $user['pseudo'],
+        'mail'   => $user['mail'],
+    ];
+}
+
+/**
+ * Supprime les infos de session de l'utilisateur.
+ */
+function logoutUser(): void {
+    ensureSession();
+
+    $_SESSION = [];
+    if (ini_get('session.use_cookies')) {
+        $params = session_get_cookie_params();
+        setcookie(
+            session_name(),
+            '',
+            time() - 42000,
+            $params['path'],
+            $params['domain'],
+            $params['secure'],
+            $params['httponly']
+        );
+    }
+    session_destroy();
+}
+
+/**
+ * Retourne les infos de l'utilisateur connecté, ou null si personne.
+ */
+function currentUser(): ?array {
+    ensureSession();
+    return $_SESSION['user'] ?? null;
+}
+
+/**
+ * True si quelqu’un est connecté.
+ */
+function isLoggedIn(): bool {
+    return currentUser() !== null;
+}
+
+/**
+ * Vérifie le login en base de données.
+ * $identifiant = pseudo OU mail
+ * $password = mot de passe tapé par l'utilisateur
+ *
+ * Retourne le tableau utilisateur (sans le mot de passe) si OK, sinon null.
+ */
+function verifyLoginDb(string $identifiant, string $password): ?array {
+    global $pdo;
+
+    $sql = "SELECT id_utilisateur, pseudo, mail, mot_de_passe, statut_compte
+            FROM Utilisateur
+            WHERE pseudo = :identifiant
+               OR mail   = :identifiant
+            LIMIT 1";
+
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute(['identifiant' => $identifiant]);
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$user) {
+        return null; 
+    }
+
+    if (!password_verify($password, $user['mot_de_passe'])) {
+        return null;
+    }
+    unset($user['mot_de_passe']);
+    return $user;
+}
 
 ?>
