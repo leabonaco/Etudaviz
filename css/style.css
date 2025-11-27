@@ -241,7 +241,7 @@ header {
   border-bottom: 1px solid rgba(87,117,144,0.25);
   gap: 30px;
   flex-wrap: wrap;
-  overflow-x: hidden; /* sécurise */
+  overflow-x: visible; /* sécurise */
 }
 
 header.visited {

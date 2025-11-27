@@ -246,7 +246,7 @@ header {
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  background: #111827; /* gris trés foncé*/
+  background: #1A7F6A; /* gris trés foncé*/
   padding: 15px 40px;
   border-bottom: 1px solid rgba(255,255,255,0.08);
   gap: 30px;
@@ -255,7 +255,7 @@ header {
 }
 
 header.visited {
-  background: #43AA8B; /* Zomp - version plus vive au scroll */
+  background: #1A7F6A; /* Zomp - version plus vive au scroll */
 }
 
 header img {
