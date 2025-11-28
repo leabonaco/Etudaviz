@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             
             loginUser($user);
 
-            header('Location: espace_utilisateur.php');
+            header('Location: index.php');
             exit;
         } else {
             $erreur = "Identifiant (pseudo ou mail) ou mot de passe incorrect.";
